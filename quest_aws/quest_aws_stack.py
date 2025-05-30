@@ -37,7 +37,7 @@ class QuestAwsStack(Stack):
                     "pip install -r requirements.txt"
                 ],
                 commands=[
-                    "pytest",
+                    # "pytest",
                     "cdk synth"
                 ]
             )

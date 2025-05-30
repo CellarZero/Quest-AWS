@@ -19,6 +19,13 @@ class QuestFirstStack(Stack):
         queue_name = "test-DataPipelineQueue" if environment == "test" else "prod-DataPipelineQueue"
 
         print(f"Running {environment} environment")
+        sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            handler="test.lambda_handler",
+            code=_lambda.Code.from_asset("../lambda_functions"),
+            timeout=Duration.minutes(5),
+        )
+        
         # 1. S3 Bucket
         # bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "rearcquestv2")
 
