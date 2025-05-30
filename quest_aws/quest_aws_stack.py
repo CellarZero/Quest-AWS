@@ -4,6 +4,8 @@ from aws_cdk import (
     SecretValue
 )
 from constructs import Construct
+from quest_aws.stages.prod_stage import ProdStage 
+from quest_aws.stages.test_stage import TestStage 
 
 class QuestAwsStack(Stack):
 
@@ -39,4 +41,12 @@ class QuestAwsStack(Stack):
                     "cdk synth"
                 ]
             )
+        )
+
+        # Add stages
+        pipeline.add_application_stage(TestStage(self, "TestStage"))
+
+        prod_stage = ProdStage(self, "ProdStage")
+        pipeline.add_application_stage(prod_stage,
+            pre=[pipelines.ManualApprovalStep("ApproveProdDeploy")]
         )
