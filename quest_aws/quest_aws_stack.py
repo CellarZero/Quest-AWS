@@ -1,7 +1,7 @@
 from aws_cdk import (
-    # Duration,
     Stack,
-    # aws_sqs as sqs,
+    pipelines,
+    SecretValue
 )
 from constructs import Construct
 
@@ -17,3 +17,26 @@ class QuestAwsStack(Stack):
         #     self, "QuestAwsQueue",
         #     visibility_timeout=Duration.seconds(300),
         # )
+        git_input = pipelines.CodePipelineSource.git_hub(
+            repo_string="CellarZero/Quest-AWS",
+            branch="main",
+            # connection_arn="arn:aws:codestar-connections:eu-central-1:372775801647:connection/5ba58d40-4796-443d-bd86-37c610f0e665"
+            authentication=SecretValue.secrets_manager("github-token"),
+        )
+
+
+        pipeline = pipelines.CodePipeline(self, "Pipeline",
+            pipeline_name="RearcQuestCICD",
+            synth=pipelines.ShellStep("Synth",
+                input=git_input,
+
+                install_commands=[
+                    "npm install -g aws-cdk",
+                    "pip install -r requirements.txt"
+                ],
+                commands=[
+                    "pytest",
+                    "cdk synth"
+                ]
+            )
+        )
