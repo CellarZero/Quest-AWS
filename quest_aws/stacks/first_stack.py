@@ -21,7 +21,7 @@ class QuestFirstStack(Stack):
         print(f"Running {environment} environment")
         sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
             runtime=_lambda.Runtime.PYTHON_3_9,
-            handler="test.lambda_handler",
+            handler="lambda_functions.test.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
             timeout=Duration.minutes(5),
         )
