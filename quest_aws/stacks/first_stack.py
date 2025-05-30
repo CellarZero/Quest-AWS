@@ -16,13 +16,13 @@ class QuestFirstStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, environment: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        queue_name = "test-DataPipelineQueue" if environment == "test" else "prod-DataPipelineQueue"
+        queue_name = "dev-DataPipelineQueue" if environment == "dev" else "prod-DataPipelineQueue"
 
         print(f"Running {environment} environment")
         sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
             runtime=_lambda.Runtime.PYTHON_3_9,
             handler="test.lambda_handler",
-            code=_lambda.Code.from_asset("../lambda_functions"),
+            code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
             timeout=Duration.minutes(5),
         )
         

@@ -5,7 +5,7 @@ from aws_cdk import (
 )
 from constructs import Construct
 from quest_aws.stages.prod_stage import ProdStage 
-from quest_aws.stages.test_stage import TestStage 
+from quest_aws.stages.dev_stage import DevStage
 
 class QuestAwsStack(Stack):
 
@@ -44,7 +44,7 @@ class QuestAwsStack(Stack):
         )
 
         # Add stages
-        pipeline.add_stage(TestStage(self, "TestStage"))
+        pipeline.add_stage(DevStage(self, "DevStage"))
 
         prod_stage = ProdStage(self, "ProdStage")
         pipeline.add_stage(prod_stage,
