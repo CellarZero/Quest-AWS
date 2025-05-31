@@ -19,7 +19,13 @@ class QuestFirstStack(Stack):
         bucket = s3.Bucket.from_bucket_name(self, "ExistingBucket", "rearcquestv2")
         queue_name = "dev-DataPipelineQueue" if environment == "dev" else "prod-DataPipelineQueue"
 
-        queue = sqs.Queue.from_queue_name(self, "ExistingQueue", queue_name)
+        queue = sqs.Queue.from_queue_attributes(
+            self, "ExistingQueue",
+            queue_arn=f"arn:aws:sqs:{self.region}:{self.account}:{queue_name}",
+            queue_url=f"https://sqs.{self.region}.amazonaws.com/{self.account}/{queue_name}"
+        )   
+
+        # queue = sqs.Queue.from_queue_name(self, "ExistingQueue", queue_name)
 
         sync_lambda = _lambda.Function(self, f"{environment}-SyncLambda",
             runtime=_lambda.Runtime.PYTHON_3_9,
