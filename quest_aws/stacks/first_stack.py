@@ -16,15 +16,57 @@ class QuestFirstStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, environment: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
+        bucket = s3.Bucket.from_bucket_name(self, "ExistingBucket", "rearcquestv2")
         queue_name = "dev-DataPipelineQueue" if environment == "dev" else "prod-DataPipelineQueue"
 
-        print(f"Running {environment} environment")
-        sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
+        queue = sqs.Queue.from_queue_name(self, "ExistingQueue", queue_name)
+
+        sync_lambda = _lambda.Function(self, f"{environment}-SyncLambda",
             runtime=_lambda.Runtime.PYTHON_3_9,
-            handler="lambda_functions.test.lambda_handler",
+            handler="lambda_functions.sync_bls_api.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
-            timeout=Duration.minutes(5),
+            timeout=Duration.minutes(1),
+            environment={"BUCKET_NAME": bucket.bucket_name}
         )
+        bucket.grant_write(sync_lambda)
+
+        events.Rule(self, f"{environment}-DailySyncRule",
+            schedule=events.Schedule.rate(Duration.days(1)),
+            targets=[targets.LambdaFunction(sync_lambda)]
+        )
+
+        analytics_lambda = _lambda.Function(self, f"AnalyticsLambda-{environment}",
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            handler="lambda_functions.analysis.lambda_handler",
+            code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
+            timeout=Duration.minutes(1),
+            environment={"BUCKET_NAME": bucket.bucket_name}
+        )
+        bucket.grant_read(analytics_lambda)
+        queue.grant_consume_messages(analytics_lambda)
+
+        analytics_lambda.add_event_source_mapping(
+            f"-{environment}-SQSTrigger",
+            event_source_arn=queue.queue_arn,
+            batch_size=1
+        )
+
+        bucket.add_event_notification(
+            s3.EventType.OBJECT_CREATED_PUT,
+            s3n.SqsDestination(queue),
+            s3.NotificationKeyFilter(prefix="population-data/", suffix=".json")
+        )
+
+
+        
+
+        # print(f"Running {environment} environment")
+        # sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
+        #     runtime=_lambda.Runtime.PYTHON_3_9,
+        #     handler="lambda_functions.test.lambda_handler",
+        #     code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
+        #     timeout=Duration.minutes(5),
+        # )
         
         # 1. S3 Bucket
         # bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "rearcquestv2")
