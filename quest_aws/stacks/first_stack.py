@@ -16,12 +16,12 @@ class QuestFirstStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, environment: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
          
-        # if environment == "dev":
-        #     queue_name = "dev-DataPipelineQueue" 
-        #     bucket_name = "dev-quest-aws-bkt"
-        # else :
-        #     queue_name = "prod-DataPipelineQueue"
-        #     bucket_name = "prod-quest-aws-bkt"
+        if environment == "dev":
+            queue_name = "dev-DataPipelineQueue" 
+            bucket_name = "dev-quest-aws-bkt"
+        else :
+            queue_name = "prod-DataPipelineQueue"
+            bucket_name = "prod-quest-aws-bkt"
         
         # bucket = s3.Bucket.from_bucket_name(self, "ExistingBucket", bucket_name)
 
@@ -81,7 +81,7 @@ class QuestFirstStack(Stack):
         # )
         
         # 1. S3 Bucket
-        bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "dev-quest-aws-bkt")
+        bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", bucket_name=bucket_name)
 
         # 2. SQS Queue
         queue = sqs.Queue(self, "DataPipelineQueue",

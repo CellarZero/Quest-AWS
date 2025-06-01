@@ -3,6 +3,7 @@ import pandas as pd
 import boto3
 import gzip
 from io import BytesIO, StringIO
+import os
 
 def lambda_handler(event, context):
     s3 = boto3.client('s3')
@@ -10,6 +11,7 @@ def lambda_handler(event, context):
     pr_data_path = "s3://rearcquestv2/bls-data/pr.data.0.Current"
     population_path = "s3://rearcquestv2/population-data/population.json"
     bucket_name = "dev-quest-aws-bkt"
+    bucket_name = os.environ['BUCKET_NAME']
     
     # Load BLS time-series data
     pr_dtypes = {

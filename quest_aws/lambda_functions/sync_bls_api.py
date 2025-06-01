@@ -9,7 +9,8 @@ from botocore.exceptions import NoCredentialsError, ClientError
 # Constants
 BLS_BASE_URL = "https://download.bls.gov/pub/time.series/pr/"
 POP_API_URL = "https://datausa.io/api/data?drilldowns=Nation&measures=Population"
-BUCKET_NAME = "dev-quest-aws-bkt"
+# BUCKET_NAME = "dev-quest-aws-bkt"
+BUCKET_NAME = os.environ['BUCKET_NAME']
 BLS_S3_PREFIX = "bls-data/"
 POP_S3_KEY = "population-data/population.json"
 
