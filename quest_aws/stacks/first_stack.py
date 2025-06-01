@@ -91,7 +91,7 @@ class QuestFirstStack(Stack):
         # Lambda Function 1: SyncBLSandAPI
         sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
             runtime=_lambda.Runtime.PYTHON_3_9,
-            handler="lambda_functions.sync_bls_api.lambda_handler",
+            handler="sync_bls_api.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
             timeout=Duration.seconds(60),
             environment={
@@ -109,7 +109,7 @@ class QuestFirstStack(Stack):
         # Lambda Function 2: AnalyticsProcessor
         analytics_lambda = _lambda.Function(self, f"Analytics-{environment}",
             runtime=_lambda.Runtime.PYTHON_3_9,
-            handler="lambda_functions.analysis.lambda_handler",
+            handler="analysis.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
             timeout=Duration.seconds(60),
             environment={
