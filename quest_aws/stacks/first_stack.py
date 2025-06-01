@@ -88,6 +88,14 @@ class QuestFirstStack(Stack):
             visibility_timeout=Duration.seconds(60))
         # queue = sqs.Queue.from_queue_name(self, "RearcNotificationQueue", queue_name)
 
+        dependencies_layer = _lambda.LayerVersion(
+            self, f"DependenciesLayer-{environment}",
+            code=_lambda.Code.from_asset("quest_aws/lambda_layers/dependencies"),
+            compatible_runtimes=[_lambda.Runtime.PYTHON_3_9],
+            description="Layer for boto3, pandas, beautifulsoup4, and requests"
+)
+
+
         # Lambda Function 1: SyncBLSandAPI
         sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
             runtime=_lambda.Runtime.PYTHON_3_9,
@@ -96,7 +104,8 @@ class QuestFirstStack(Stack):
             timeout=Duration.seconds(60),
             environment={
                 "BUCKET_NAME": bucket.bucket_name
-            }
+            },
+            layers=[dependencies_layer]
         )
         bucket.grant_write(sync_lambda)
 
@@ -114,7 +123,8 @@ class QuestFirstStack(Stack):
             timeout=Duration.seconds(60),
             environment={
                 "BUCKET_NAME": bucket.bucket_name
-            }
+            },
+            layers=[dependencies_layer]
         )
         bucket.grant_read(analytics_lambda)
         queue.grant_consume_messages(analytics_lambda)
