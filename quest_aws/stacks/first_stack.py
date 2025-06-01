@@ -112,6 +112,7 @@ class QuestFirstStack(Stack):
             layers=[dependencies_layer]
         )
         bucket.grant_write(sync_lambda)
+        bucket.grant_read(sync_lambda)
 
         # Scheduled Rule to trigger sync_lambda daily
         rule = events.Rule(self, f"DailyDataSyncRule-{environment}",
