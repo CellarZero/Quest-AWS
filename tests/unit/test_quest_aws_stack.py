@@ -39,7 +39,7 @@ def test_stack_resources(environment, expected_bucket_name):
 
     # Check EventBridge Rule exists
     template.has_resource_properties("AWS::Events::Rule", {
-        "ScheduleExpression": "rate(1 day)"
+        "ScheduleExpression": "rate(10 minutes)"
     })
 
     # Check Lambda Event Source Mapping exists
