@@ -5,3 +5,5 @@ pandas
 bs4
 requests
 pytest
+requests_mock
+moto
