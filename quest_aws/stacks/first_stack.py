@@ -129,7 +129,7 @@ class QuestFirstStack(Stack):
             environment={
                 "BUCKET_NAME": bucket.bucket_name
             },
-            layers=[dependencies_layer, numpy_layer]
+            # layers=[dependencies_layer, numpy_layer]
         )
         bucket.grant_read(analytics_lambda)
         queue.grant_consume_messages(analytics_lambda)
