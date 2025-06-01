@@ -96,7 +96,7 @@ class QuestFirstStack(Stack):
         )
         numpy_layer = _lambda.LayerVersion.from_layer_version_arn(
             self, "NumpyLayer",
-            "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39-Arm64:28"
+            "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39:28"
         )
 
 

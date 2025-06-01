@@ -47,18 +47,23 @@ def sync_bls_files():
         to_delete = existing_files - files_synced
         for fname in to_delete:
             s3.delete_object(Bucket=BUCKET_NAME, Key=BLS_S3_PREFIX + fname)
+        
+        print(f"INFO synced_files_count: {len(files_synced)}\ndeleted_files_count: {len(to_delete)}")
 
-        return {
-            "synced_files_count": len(files_synced),
-            "deleted_files_count": len(to_delete)
-        }
+        return True
+
+        # return {
+        #     "synced_files_count": len(files_synced),
+        #     "deleted_files_count": len(to_delete)
+        # }
     except Exception as e:
         print(f"[ERROR] BLS sync failed: {e}")
-        return {
-            "synced_files_count": 0,
-            "deleted_files_count": 0,
-            "error": str(e)
-        }
+        return False
+        # return {
+        #     "synced_files_count": 0,
+        #     "deleted_files_count": 0,
+        #     "error": str(e)
+        # }
 
 def fetch_and_store_population_data():
     try:
@@ -78,7 +83,7 @@ def lambda_handler(event, context):
     pop_success = fetch_and_store_population_data()
 
     return {
-        "statusCode": 200 if pop_success else 500,
+        "statusCode": 200 if pop_success and bls_result else 500,
         "body": json.dumps({
             "bls_sync": bls_result,
             "population_upload_success": pop_success
