@@ -8,4 +8,3 @@ __pycache__
 # CDK asset staging directory
 .cdk.staging
 cdk.out
-quest_aws/lambda_layers/dependencies/python/lib/python3.9/site-packages/
