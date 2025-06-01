@@ -85,9 +85,9 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "Message": 'Data processed and logged successfully',
-            # "mean_population": round(mean_population),
-            # "std_population": round(std_population),
-            # "best_years": best_years.to_dict(orient='records'),
-            # "filtered_report": final_report.to_dict(orient='records')
+            "mean_population": round(mean_population),
+            "std_population": round(std_population),
+            "best_years": best_years.to_dict(orient='records'),
+            "filtered_report": final_report.to_dict(orient='records')
         })
     }
