@@ -93,7 +93,11 @@ class QuestFirstStack(Stack):
             code=_lambda.Code.from_asset("quest_aws/lambda_layers/dependencies"),
             compatible_runtimes=[_lambda.Runtime.PYTHON_3_9],
             description="Layer for boto3, pandas, beautifulsoup4, and requests"
-)
+        )
+        numpy_layer = _lambda.LayerVersion.from_layer_version_arn(
+            self, "NumpyLayer",
+            "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python39-Arm64:28"
+        )
 
 
         # Lambda Function 1: SyncBLSandAPI
@@ -124,7 +128,7 @@ class QuestFirstStack(Stack):
             environment={
                 "BUCKET_NAME": bucket.bucket_name
             },
-            layers=[dependencies_layer]
+            layers=[dependencies_layer, numpy_layer]
         )
         bucket.grant_read(analytics_lambda)
         queue.grant_consume_messages(analytics_lambda)
