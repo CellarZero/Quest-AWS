@@ -9,6 +9,7 @@ def lambda_handler(event, context):
     # Define S3 paths
     pr_data_path = "s3://rearcquestv2/bls-data/pr.data.0.Current"
     population_path = "s3://rearcquestv2/population-data/population.json"
+    bucket_name = "dev-quest-aws-bkt"
     
     # Load BLS time-series data
     pr_dtypes = {
@@ -18,7 +19,7 @@ def lambda_handler(event, context):
         'value': float,
         'footnote_codes': str
     }
-    response = s3.get_object(Bucket='rearcquestv2', Key='bls-data/pr.data.0.Current')
+    response = s3.get_object(Bucket=bucket_name, Key='bls-data/pr.data.0.Current')
     compressed_body = response['Body'].read()
     decompressed_body = gzip.decompress(compressed_body).decode('utf-8')
     pr_df = pd.read_csv(StringIO(decompressed_body), sep='\t', dtype=pr_dtypes)
@@ -33,7 +34,7 @@ def lambda_handler(event, context):
     pr_df.columns = pr_df.columns.str.strip()
     pr_df = pr_df.map(lambda x: x.strip() if isinstance(x, str) else x)
 
-    response = s3.get_object(Bucket='rearcquestv2', Key='population-data/population.json')
+    response = s3.get_object(Bucket=bucket_name, Key='population-data/population.json')
     population_json = json.loads(response['Body'].read())
 
     

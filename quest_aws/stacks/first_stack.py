@@ -31,7 +31,7 @@ class QuestFirstStack(Stack):
         #     queue_url=f"https://sqs.{self.region}.amazonaws.com/{self.account}/{queue_name}"
         # )   
 
-        # # queue = sqs.Queue.from_queue_name(self, "ExistingQueue", queue_name)
+        ## queue = sqs.Queue.from_queue_name(self, "ExistingQueue", queue_name)
 
         # sync_lambda = _lambda.Function(self, f"{environment}-SyncLambda",
         #     runtime=_lambda.Runtime.PYTHON_3_9,
@@ -84,12 +84,12 @@ class QuestFirstStack(Stack):
         bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "dev-quest-aws-bkt")
 
         # 2. SQS Queue
-        queue = sqs.Queue(self, "dev-DataPipelineQueue",
+        queue = sqs.Queue(self, "DataPipelineQueue",
             visibility_timeout=Duration.seconds(60))
         # queue = sqs.Queue.from_queue_name(self, "RearcNotificationQueue", queue_name)
 
         dependencies_layer = _lambda.LayerVersion(
-            self, f"DependenciesLayer-{environment}",
+            self, f"DependenciesLayer",
             code=_lambda.Code.from_asset("quest_aws/lambda_layers/dependencies"),
             compatible_runtimes=[_lambda.Runtime.PYTHON_3_9],
             description="Layer for boto3, pandas, beautifulsoup4, and requests"
@@ -101,7 +101,7 @@ class QuestFirstStack(Stack):
 
 
         # Lambda Function 1: SyncBLSandAPI
-        sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData-{environment}",
+        sync_lambda = _lambda.Function(self, f"SyncBLSandAPIData",
             runtime=_lambda.Runtime.PYTHON_3_9,
             handler="sync_bls_api.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
@@ -115,13 +115,13 @@ class QuestFirstStack(Stack):
         bucket.grant_read(sync_lambda)
 
         # Scheduled Rule to trigger sync_lambda daily
-        rule = events.Rule(self, f"DailyDataSyncRule-{environment}",
+        rule = events.Rule(self, f"DailyDataSyncRule",
             schedule=events.Schedule.rate(Duration.minutes(10))
         )
         rule.add_target(targets.LambdaFunction(sync_lambda))
 
         # Lambda Function 2: AnalyticsProcessor
-        analytics_lambda = _lambda.Function(self, f"Analytics-{environment}",
+        analytics_lambda = _lambda.Function(self, f"Analytics",
             runtime=_lambda.Runtime.PYTHON_3_9,
             handler="analysis.lambda_handler",
             code=_lambda.Code.from_asset("quest_aws/lambda_functions"),
