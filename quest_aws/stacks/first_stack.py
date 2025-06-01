@@ -116,7 +116,7 @@ class QuestFirstStack(Stack):
 
         # Scheduled Rule to trigger sync_lambda daily
         rule = events.Rule(self, f"DailyDataSyncRule-{environment}",
-            schedule=events.Schedule.rate(Duration.minutes(7))
+            schedule=events.Schedule.rate(Duration.minutes(10))
         )
         rule.add_target(targets.LambdaFunction(sync_lambda))
 
@@ -129,7 +129,7 @@ class QuestFirstStack(Stack):
             environment={
                 "BUCKET_NAME": bucket.bucket_name
             },
-            # layers=[dependencies_layer, numpy_layer]
+            layers=[dependencies_layer, numpy_layer]
         )
         bucket.grant_read(analytics_lambda)
         queue.grant_consume_messages(analytics_lambda)
