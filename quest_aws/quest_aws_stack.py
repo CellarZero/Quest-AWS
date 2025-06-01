@@ -46,7 +46,7 @@ class QuestAwsStack(Stack):
         # Add stages
         pipeline.add_stage(DevStage(self, "DevStage"))
 
-        prod_stage = ProdStage(self, "ProdStage")
-        pipeline.add_stage(prod_stage,
-            pre=[pipelines.ManualApprovalStep("ApproveProdDeploy")]
-        )
+        # prod_stage = ProdStage(self, "ProdStage")
+        # pipeline.add_stage(prod_stage,
+        #     pre=[pipelines.ManualApprovalStep("ApproveProdDeploy")]
+        # )
