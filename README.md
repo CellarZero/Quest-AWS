@@ -54,19 +54,23 @@ rearc-quest-aws/
 ```bash
 git clone https://github.com/CellarZero/Quest-AWS.git
 cd Quest-AWS
+```
 
 2️⃣ **Create a virtual environment and activate it:**
 ```bash
 python3 -m venv rearcenv
 source rearcenv/bin/activate
+```
 
 3️⃣ **Install dependencies:**
 ```bash
 pip install -r requirements.txt
+```
 
 4️⃣ **Install AWS CDK:**
 ```bash
 npm install -g aws-cdk
+```
 
 ---
 
@@ -75,10 +79,12 @@ npm install -g aws-cdk
 1️⃣ **Bootstrap your AWS environment:**
 ```bash
 cdk bootstrap aws://<ACCOUNT_ID>/<REGION>
+```
 
 2️⃣ **Deploy your stack:**
 ```bash
 cdk deploy
+```
 
 ---
 
@@ -90,6 +96,7 @@ The unit tests cover:
 * Run them using pytest:
 ```bash
 pytest tests/unit
+```
 
 --- 
 
@@ -107,6 +114,7 @@ Store your GitHub token using AWS CLI:
 aws secretsmanager create-secret \
   --name github-token \
   --secret-string "<your-github-token>"
+```
 
 ---
 
@@ -114,6 +122,7 @@ aws secretsmanager create-secret \
 To remove all resources:
 ```bash
 cdk destroy
+```
 
 ---
 
