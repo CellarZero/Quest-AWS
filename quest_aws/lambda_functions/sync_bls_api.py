@@ -48,7 +48,7 @@ def sync_bls_files():
         for fname in to_delete:
             s3.delete_object(Bucket=BUCKET_NAME, Key=BLS_S3_PREFIX + fname)
         
-        print(f"INFO synced_files_count: {len(files_synced)}\ndeleted_files_count: {len(to_delete)}")
+        print(f"[OUTPUT] synced_files_count: {len(files_synced)}\n[OUTPUT] deleted_files_count: {len(to_delete)}")
 
         return True
 
@@ -72,7 +72,7 @@ def fetch_and_store_population_data():
         data = response.json()
         json_bytes = json.dumps(data).encode("utf-8")
         s3.put_object(Bucket=BUCKET_NAME, Key=POP_S3_KEY, Body=json_bytes)
-        print(f"[INFO] Uploaded population data to s3://{BUCKET_NAME}/{POP_S3_KEY}")
+        print(f"[OUTPUT] Uploaded population data to s3://{BUCKET_NAME}/{POP_S3_KEY}")
         return True
     except (requests.RequestException, ClientError, NoCredentialsError) as e:
         print(f"[ERROR] Population data fetch/upload failed: {e}")

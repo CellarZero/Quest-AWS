@@ -81,10 +81,10 @@ class QuestFirstStack(Stack):
         # )
         
         # 1. S3 Bucket
-        bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "rearcquestv2")
+        bucket = s3.Bucket.from_bucket_name(self, "RearcQuestV2Bucket", "dev-quest-aws-bkt")
 
         # 2. SQS Queue
-        queue = sqs.Queue(self, "DataPipelineQueue",
+        queue = sqs.Queue(self, "dev-DataPipelineQueue",
             visibility_timeout=Duration.seconds(60))
         # queue = sqs.Queue.from_queue_name(self, "RearcNotificationQueue", queue_name)
 
