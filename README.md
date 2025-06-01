@@ -127,12 +127,8 @@ cdk destroy
 ---
 
 ## 🔎 Additional Notes
-Lambda Layers:
-Add external dependencies like boto3, pandas, beautifulsoup4, etc. to quest_aws/lambda_layers/dependencies/ and build a ZIP package if needed.
+* Lambda Layers: Add external dependencies like boto3, pandas, beautifulsoup4, etc. to quest_aws/lambda_layers/dependencies/ and build a ZIP package if needed.
 
-CDK Stages:
-The pipeline includes both Dev and Prod stages with a Manual Approval step before production deployment.
+* CDK Stages: The pipeline includes both Dev and Prod stages with a Manual Approval step before production deployment.
 
-Environment Variables:
-
-BUCKET_NAME is passed automatically in each environment.
+* Environment Variables: BUCKET_NAME is passed automatically in each environment.

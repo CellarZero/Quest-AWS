@@ -44,7 +44,21 @@ class QuestAwsStack(Stack):
         )
 
         # Add stages
-        pipeline.add_stage(DevStage(self, "DevStage"))
+
+        # Add unit test step (fail pipeline on test failure)
+        test_step = pipelines.ShellStep("RunUnitTests",
+            input=git_input,
+            install_commands=[
+                "pip install -r requirements.txt"
+            ],
+            commands=[
+                "pytest tests/unit"
+            ]
+        )
+        dev_stage = DevStage(self, "DevStage")
+        pipeline.add_stage(dev_stage,
+            pre=[test_step]
+        )
 
         prod_stage = ProdStage(self, "ProdStage")
         pipeline.add_stage(prod_stage,
