@@ -116,7 +116,7 @@ class QuestFirstStack(Stack):
 
         # Scheduled Rule to trigger sync_lambda daily
         rule = events.Rule(self, f"DailyDataSyncRule-{environment}",
-            schedule=events.Schedule.rate(Duration.minutes(15))
+            schedule=events.Schedule.rate(Duration.minutes(7))
         )
         rule.add_target(targets.LambdaFunction(sync_lambda))
 
