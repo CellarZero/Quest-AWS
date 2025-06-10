@@ -91,7 +91,6 @@ cdk deploy
 ## 🧪 Run Unit Tests
 
 The unit tests cover:
-* Lambda functions (sync_bls_api and analysis)
 * CDK stack resources
 * Run them using pytest:
 ```bash
